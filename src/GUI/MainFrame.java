@@ -201,7 +201,7 @@ public class MainFrame extends javax.swing.JFrame implements ButtonHandler {
                     .addComponent(jLabel9)
                     .addComponent(qrSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(saveButton)
                     .addComponent(createButton))
                 .addContainerGap(32, Short.MAX_VALUE))
