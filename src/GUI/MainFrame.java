@@ -6,6 +6,9 @@
 package GUI;
 
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Calendar;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -17,7 +20,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-public class MainFrame extends JFrame implements MainFrameListener.ButtonHandler{
+public class MainFrame extends JFrame {
     private final Font LABEL_FONT1 = new Font("Tahoma", Font.BOLD, 18);
     private final Font LABEL_FONT2 = new Font("Tahoma", Font.BOLD, 14);
     private final String QR_FILE_TYPES[] = new String[]{"JPEG", "PNG"};
@@ -46,7 +49,7 @@ public class MainFrame extends JFrame implements MainFrameListener.ButtonHandler
     private JSpinner yearSpinner1;
     private JSpinner yearSpinner2;  
     
-    private MainFrameListener mainFrameListeners;
+    private ButtonListener buttonListener;
     private SpinnerListener spinnerListener;
     
     public MainFrame() {
@@ -234,7 +237,11 @@ public class MainFrame extends JFrame implements MainFrameListener.ButtonHandler
         this.daySpinner1.addChangeListener(this.spinnerListener);
         this.daySpinner2.addChangeListener(this.spinnerListener);
         this.monthSpinner1.addChangeListener(this.spinnerListener);
-        this.monthSpinner2.addChangeListener(this.spinnerListener);
+        this.monthSpinner2.addChangeListener(this.spinnerListener);   
+        
+        this.buttonListener = new ButtonListener();
+        this.createButton.addMouseListener(this.buttonListener);
+        this.saveButton.addMouseListener(this.buttonListener);
     }
     
     public JSpinner[] getDaySpinners() {
@@ -251,11 +258,15 @@ public class MainFrame extends JFrame implements MainFrameListener.ButtonHandler
         return result;
     }
 
-    @Override
-    public void handleCreating() {        
-    }
-
-    @Override
-    public void handleSaving() {
+    private class ButtonListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JButton target = (JButton) e.getSource();
+            if (target == MainFrame.this.createButton) {
+                
+            } else if (target == MainFrame.this.saveButton) {
+                    GUIManager.getInstance().loginDialog.setVisible(true);
+                }
+        }
     }
 }

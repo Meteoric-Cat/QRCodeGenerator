@@ -14,8 +14,6 @@ import javax.swing.JButton;
  * @author Meteoric
  */
 public class MainFrameListener extends MouseAdapter{
-    final String CREATE_BUTTON = "Create QR";
-    final String SAVE_BUTTON = "Save DB";
     ButtonHandler buttonHandler;
     
     public MainFrameListener(MainFrame mainFrame) {
@@ -25,17 +23,10 @@ public class MainFrameListener extends MouseAdapter{
     
     @Override
     public void mousePressed(MouseEvent e) {
-        JButton button = (JButton) e.getSource();
-        if (button.getText().equalsIgnoreCase(CREATE_BUTTON)) {
-            this.buttonHandler.handleCreating();
-        }
-        if (button.getText().equalsIgnoreCase(SAVE_BUTTON)) {
-            this.buttonHandler.handleSaving();
-        }
+        this.buttonHandler.handleButton((JButton) e.getSource());
     }
     
     public interface ButtonHandler {
-        void handleCreating();
-        void handleSaving();
+        public void handleButton(JButton button);
     }
 }
