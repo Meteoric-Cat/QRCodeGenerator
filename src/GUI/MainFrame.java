@@ -5,288 +5,257 @@
  */
 package GUI;
 
-import GUI.MainFrameListener.ButtonHandler;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.glxn.qrgen.core.image.ImageType;
-import net.glxn.qrgen.javase.QRCode;
+import java.awt.Font;
+import java.util.Calendar;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
-/**
- *
- * @author Meteoric
- */
-public class MainFrame extends javax.swing.JFrame implements ButtonHandler {
-
+public class MainFrame extends JFrame implements MainFrameListener.ButtonHandler{
+    private final Font LABEL_FONT1 = new Font("Tahoma", Font.BOLD, 18);
+    private final Font LABEL_FONT2 = new Font("Tahoma", Font.BOLD, 14);
+    private final String QR_FILE_TYPES[] = new String[]{"JPEG", "PNG"};
+    private final int DEFAULT_QR_SIZE = 250;
+    
+    private JButton createButton;
+    private JSpinner daySpinner1;
+    private JSpinner daySpinner2;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
+    private JLabel jLabel3;
+    private JLabel jLabel4;
+    private JLabel jLabel5;
+    private JLabel jLabel6;
+    private JLabel jLabel7;
+    private JLabel jLabel8;
+    private JLabel jLabel9;
+    private JSpinner monthSpinner1;
+    private JSpinner monthSpinner2;
+    private JTextField productionIDField;
+    private JTextField qrNameField;
+    private JSpinner qrSizeSpinner;
+    private JComboBox<String> qrTypeBox;
+    private JButton saveButton;
+    private JTextField serverNameField;
+    private JSpinner yearSpinner1;
+    private JSpinner yearSpinner2;  
+    
+    private MainFrameListener mainFrameListeners;
+    private SpinnerListener spinnerListener;
+    
     public MainFrame() {
-        initComponents();        
-        initListeners();        
+        initGUIComponents();        
+        placeGUIComponents();
+        
+        initGUIListeners();
     }
+    
+    private void initGUIComponents() {
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jLabel3 = new JLabel();
+        jLabel4 = new JLabel();
+        jLabel5 = new JLabel();
+        jLabel6 = new JLabel();
+        jLabel7 = new JLabel();
+        jLabel8 = new JLabel();
+        jLabel9 = new JLabel();
+        serverNameField = new JTextField();
+        productionIDField = new JTextField();
+        daySpinner1 = new JSpinner();
+        monthSpinner1 = new JSpinner();
+        yearSpinner1 = new JSpinner();
+        daySpinner2 = new JSpinner();
+        monthSpinner2 = new JSpinner();
+        yearSpinner2 = new JSpinner();
+        qrNameField = new JTextField();
+        qrSizeSpinner = new JSpinner();
+        qrTypeBox = new JComboBox<>();
+        createButton = new JButton();
+        saveButton = new JButton();
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        ipField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        productionField = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        producerField = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        mDateField = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        eDateField = new javax.swing.JTextField();
-        createButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        qrNameField = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        qrSizeField = new javax.swing.JTextField();
+        jLabel1.setFont(LABEL_FONT1); // NOI18N
+        jLabel1.setText("Thông tin sản phẩm");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("QRGenerator");
-        setAlwaysOnTop(true);
-        setMinimumSize(new java.awt.Dimension(581, 450));
-        setResizable(false);
+        jLabel2.setFont(LABEL_FONT2);
+        jLabel2.setText("Tên miền server");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel1.setText("Production Information");
+        jLabel3.setFont(LABEL_FONT2);
+        jLabel3.setText("ID sản phẩm");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel2.setText("IP:");
+        jLabel4.setFont(LABEL_FONT2);
+        jLabel4.setText("Ngày sản xuất");
 
-        ipField.setToolTipText("");
+        jLabel5.setFont(LABEL_FONT2);
+        jLabel5.setText("Hạn dùng");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel3.setText("Production:");
+        jLabel6.setFont(LABEL_FONT1);
+        jLabel6.setText("Thông tin file QR Code");
 
-        productionField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productionFieldActionPerformed(evt);
-            }
-        });
+        jLabel7.setFont(LABEL_FONT2);
+        jLabel7.setText("Tên");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel4.setText("Producer:");
+        jLabel8.setFont(LABEL_FONT2);
+        jLabel8.setText("Kích thước");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel9.setFont(LABEL_FONT2);
+        jLabel9.setText("Loại");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel6.setText("M.date:");
+        qrTypeBox.setModel(new DefaultComboBoxModel<>(QR_FILE_TYPES));
 
-        mDateField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mDateFieldActionPerformed(evt);
-            }
-        });
+        createButton.setFont(LABEL_FONT2); // NOI18N
+        createButton.setText("Tạo");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel8.setText("E.date:");
+        saveButton.setFont(LABEL_FONT2); // NOI18N
+        saveButton.setText("Lưu");      
 
-        eDateField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eDateFieldActionPerformed(evt);
-            }
-        });
-
-        createButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        createButton.setText("Create QR");
-        createButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        saveButton.setText("Save DB");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel7.setText("QR File name:");
-
-        qrNameField.setToolTipText("use absolute path");
-        qrNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qrNameFieldActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel9.setText("File size:");
-
-        qrSizeField.setText("250");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        Calendar now = Calendar.getInstance();        
+        daySpinner1.setValue(now.get(Calendar.DAY_OF_MONTH));
+        daySpinner2.setValue(now.get(Calendar.DAY_OF_MONTH));
+        
+        monthSpinner1.setValue(now.get(Calendar.MONTH) + 1);
+        monthSpinner2.setValue(now.get(Calendar.MONTH) + 1);
+        
+        yearSpinner1.setValue(now.get(Calendar.YEAR));
+        yearSpinner2.setValue(now.get(Calendar.YEAR));        
+        
+        qrSizeSpinner.setValue(DEFAULT_QR_SIZE);
+    }
+    
+    private void placeGUIComponents() {
+        GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        this.getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(125, 125, 125)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel6)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel5)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(serverNameField)
+                            .addComponent(productionIDField)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(daySpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(monthSpinner2))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(daySpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(monthSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(yearSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                    .addComponent(yearSpinner2)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(qrTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(qrNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(qrSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(producerField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(productionField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
-                                .addComponent(eDateField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(createButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(saveButton))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel9))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(qrNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
-                                .addComponent(qrSizeField)))))
-                .addContainerGap(108, Short.MAX_VALUE))
+                                .addComponent(createButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(92, 92, 92)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(ipField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(serverNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(productionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(productionIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(producerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(mDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(daySpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(monthSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yearSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eDateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel5)
+                    .addComponent(daySpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(monthSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yearSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(qrNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(qrSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(qrSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(qrTypeBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(saveButton)
-                    .addComponent(createButton))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createButton)
+                    .addComponent(saveButton))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void productionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productionFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_productionFieldActionPerformed
-
-    private void mDateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mDateFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mDateFieldActionPerformed
-
-    private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-    }//GEN-LAST:event_createButtonActionPerformed
-
-    private void qrNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qrNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_qrNameFieldActionPerformed
-
-    private void eDateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eDateFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_eDateFieldActionPerformed
-
-    private void initListeners() {
-        MainFrameListener mainFrameListener = new MainFrameListener(this);
-        this.createButton.addMouseListener(mainFrameListener);
-        this.saveButton.addMouseListener(mainFrameListener);
+        pack();                
     }
+    
+    private void initGUIListeners() {
+        this.spinnerListener = new SpinnerListener(this);
+        this.daySpinner1.addChangeListener(this.spinnerListener);
+        this.daySpinner2.addChangeListener(this.spinnerListener);
+        this.monthSpinner1.addChangeListener(this.spinnerListener);
+        this.monthSpinner2.addChangeListener(this.spinnerListener);
+    }
+    
+    public JSpinner[] getDaySpinners() {
+        JSpinner result[] = new JSpinner[2];
+        result[0] = this.daySpinner1;
+        result[1] = this.daySpinner2;
+        return result;
+    }
+    
+    public JSpinner[] getMonthSpinners() {
+        JSpinner result[] = new JSpinner[2];
+        result[0] = this.monthSpinner1;
+        result[1] = this.monthSpinner2;
+        return result;
+    }
+
     @Override
     public void handleCreating() {        
-        FileOutputStream outputStream = null;
-        try {
-            String value = String.join("::", this.ipField.getText(),
-                    this.productionField.getText(),
-                    this.producerField.getText(),
-                    this.mDateField.getText(),
-                    this.eDateField.getText()
-            ); 
-            
-            ByteArrayOutputStream outputByteStream = QRCode.from(value).
-                    withSize(Integer.parseInt(this.qrSizeField.getText()), 
-                            Integer.parseInt(this.qrSizeField.getText())).to(ImageType.JPG).stream();
-            
-            File f = new File(this.qrNameField.getText());
-            outputStream = new FileOutputStream(f);
-            outputStream.write(outputByteStream.toByteArray());
-            outputStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outputStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 
     @Override
     public void handleSaving() {
-        
     }
-    
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton createButton;
-    private javax.swing.JTextField eDateField;
-    private javax.swing.JTextField ipField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField mDateField;
-    private javax.swing.JTextField producerField;
-    private javax.swing.JTextField productionField;
-    private javax.swing.JTextField qrNameField;
-    private javax.swing.JTextField qrSizeField;
-    private javax.swing.JButton saveButton;
-    // End of variables declaration//GEN-END:variables
 }

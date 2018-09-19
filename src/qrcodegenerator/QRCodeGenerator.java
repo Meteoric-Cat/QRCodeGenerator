@@ -5,6 +5,7 @@
  */
 package qrcodegenerator;
 
+import GUI.GUIManager;
 import GUI.MainFrame;
 
 /**
@@ -17,8 +18,7 @@ public class QRCodeGenerator {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainFrame mainFrame = new MainFrame();
-        mainFrame.setVisible(true);
+        GUIManager.getInstance().mainFrame.setVisible(true);
     }
     
 }
