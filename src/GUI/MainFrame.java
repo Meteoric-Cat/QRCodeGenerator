@@ -5,11 +5,24 @@
  */
 package GUI;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -263,7 +276,43 @@ public class MainFrame extends JFrame {
         public void mouseClicked(MouseEvent e) {
             JButton target = (JButton) e.getSource();
             if (target == MainFrame.this.createButton) {
-                
+                try {
+                    String mDate = String.join("/",
+                            MainFrame.this.daySpinner1.getValue().toString(),
+                            MainFrame.this.monthSpinner1.getValue().toString(),
+                            MainFrame.this.yearSpinner1.getValue().toString()
+                    );
+                    String eDate = String.join("/",
+                            MainFrame.this.daySpinner2.getValue().toString(),
+                            MainFrame.this.monthSpinner2.getValue().toString(),
+                            MainFrame.this.yearSpinner2.getValue().toString()
+                    );
+                    String value = String.join("||",
+                            MainFrame.this.serverNameField.getText(),
+                            MainFrame.this.productionIDField.getText(),
+                            mDate,
+                            eDate
+                    );
+                    
+                    Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
+                    hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                    
+                    MultiFormatWriter encoder = new MultiFormatWriter();
+                    BitMatrix bitMatrix = encoder.encode(value, BarcodeFormat.QR_CODE,
+                            Integer.parseInt(MainFrame.this.qrSizeSpinner.getValue().toString()),
+                            Integer.parseInt(MainFrame.this.qrSizeSpinner.getValue().toString()),
+                            hintMap
+                    );
+                   
+                    MatrixToImageWriter.writeToPath(bitMatrix,
+                            MainFrame.this.qrTypeBox.getSelectedItem().toString(),
+                            (new File(MainFrame.this.qrNameField.getText())).toPath()
+                    );
+                } catch (WriterException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else if (target == MainFrame.this.saveButton) {
                     GUIManager.getInstance().loginDialog.setVisible(true);
                 }
