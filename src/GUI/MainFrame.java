@@ -32,12 +32,18 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import org.json.simple.JSONObject;
 
 public class MainFrame extends JFrame {
     private final Font LABEL_FONT1 = new Font("Tahoma", Font.BOLD, 18);
     private final Font LABEL_FONT2 = new Font("Tahoma", Font.BOLD, 14);
     private final String QR_FILE_TYPES[] = new String[]{"JPEG", "PNG"};
     private final int DEFAULT_QR_SIZE = 250;
+    
+    private final String SERVER_DM_KEY = "ServerDomainName";
+    private final String PRODUCT_ID_KEY = "ProductionID";
+    private final String M_DATE_KEY = "ManufacturingDay";
+    private final String E_DATE_KEY = "ExpirationDay";
     
     private JButton createButton;
     private JSpinner daySpinner1;
@@ -67,8 +73,7 @@ public class MainFrame extends JFrame {
     
     public MainFrame() {
         initGUIComponents();        
-        placeGUIComponents();
-        
+        placeGUIComponents();        
         initGUIListeners();
     }
     
@@ -270,7 +275,39 @@ public class MainFrame extends JFrame {
         result[1] = this.monthSpinner2;
         return result;
     }
+    
+    public String getServerDomainName() {
+        return this.serverNameField.getText();
+    }
 
+    public JSONObject getProductInformation() {
+        if (this.serverNameField.getText().isEmpty() || this.productionIDField.getText().isEmpty()) {
+            return null;
+        } 
+        
+        JSONObject jsonObject = new JSONObject();
+        String date;
+
+        jsonObject.put(SERVER_DM_KEY, this.serverNameField.getText());
+        jsonObject.put(PRODUCT_ID_KEY, this.productionIDField.getText());        
+        
+        date = String.join("/",
+                String.valueOf(this.daySpinner1.getValue()),
+                String.valueOf(this.monthSpinner1.getValue()),
+                String.valueOf(this.yearSpinner1.getValue())
+        );
+        jsonObject.put(M_DATE_KEY, date);
+        
+        date = String.join("/",
+                String.valueOf(this.daySpinner2.getValue()),
+                String.valueOf(this.monthSpinner2.getValue()),
+                String.valueOf(this.yearSpinner2.getValue())
+        );                
+        jsonObject.put(E_DATE_KEY, date);
+        
+        return jsonObject;
+    }
+    
     private class ButtonListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
