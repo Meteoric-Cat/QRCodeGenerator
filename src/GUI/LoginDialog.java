@@ -43,10 +43,11 @@ public class LoginDialog extends JDialog{
     private final String SYSTEM_ERROR_1 = "Lacking some product information";
     
     private final String SERVER_PROTOCOL = "https://";
+    private final String SERVER_PATH = "/add_product";
     private final String POST_METHOD = "POST";
     
     private final String REQUEST_PROPERTY_1 = "Content-Type";
-    private final String RP1_VALUE = "application/json; charset=UTF-8";
+    private final String RP1_VALUE = "application/json;";   
     
     private JLabel jLabel1;
     private JLabel jLabel2;
@@ -156,7 +157,7 @@ public class LoginDialog extends JDialog{
         contentObject.put(PRODUCTION_KEY, productInfo);                
                 
         try {
-            String serverDN = GUIManager.getInstance().mainFrame.getServerDomainName();
+            String serverDN = GUIManager.getInstance().mainFrame.getServerDomainName() + SERVER_PATH;
             if (serverDN.isEmpty()) {
                 JOptionPane.showMessageDialog(null, SERVER_FAULT_1, SUB_DIALOG_TITLE, JOptionPane.WARNING_MESSAGE);
             } 
@@ -170,16 +171,22 @@ public class LoginDialog extends JDialog{
             outputStream.write(contentObject.toString().getBytes());
             outputStream.close();
                    
-            serverConnection.setDoInput(true);
+            //serverConnection.setDoInput(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
             String responseMessage = reader.readLine();
             if (responseMessage.isEmpty()) {
                 responseMessage = SERVER_FAULT_1;
             }
             JOptionPane.showMessageDialog(null, responseMessage, SUB_DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);                    
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            
             reader.close();                    
         } catch (Exception ex) {
-            //Logger.getLogger(LoginDialog.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LoginDialog.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex.getMessage(), SUB_DIALOG_TITLE, JOptionPane.PLAIN_MESSAGE);
         }        
     }

@@ -102,6 +102,7 @@ public class MainFrame extends JFrame {
         saveButton = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        serverNameField.setText("sleepy-depths-45970.herokuapp.com");
 
         jLabel1.setFont(LABEL_FONT1); // NOI18N
         jLabel1.setText("Thông tin sản phẩm");
@@ -287,7 +288,7 @@ public class MainFrame extends JFrame {
         
         JSONObject jsonObject = new JSONObject();
         String date;
-
+        
         jsonObject.put(SERVER_DM_KEY, this.serverNameField.getText());
         jsonObject.put(PRODUCT_ID_KEY, this.productionIDField.getText());        
         
