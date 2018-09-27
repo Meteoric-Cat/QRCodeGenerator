@@ -338,7 +338,7 @@ public class MainFrame extends JFrame {
                 String.valueOf(this.yearSpinner2.getValue())
         );                
         jsonObject.put(E_DATE_KEY, date);
-        
+        System.out.println(jsonObject.toString());
         return jsonObject;
     }
     
