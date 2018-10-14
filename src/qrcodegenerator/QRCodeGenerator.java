@@ -6,7 +6,6 @@
 package qrcodegenerator;
 
 import GUI.GUIManager;
-import GUI.MainFrame;
 
 /**
  *

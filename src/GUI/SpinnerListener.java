@@ -18,9 +18,9 @@ public class SpinnerListener implements ChangeListener{
     
     private JSpinner daySpinner[], monthSpinner[];   
     
-    public SpinnerListener(MainFrame frame) {
-        this.daySpinner = frame.getDaySpinners();
-        this.monthSpinner = frame.getMonthSpinners();        
+    public SpinnerListener(ProductDialog dialog) {
+        this.daySpinner = dialog.getDaySpinners();
+        this.monthSpinner = dialog.getMonthSpinners();        
     }
 
     @Override
