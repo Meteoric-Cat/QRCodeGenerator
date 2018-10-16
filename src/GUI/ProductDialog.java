@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import Helpers.Convertor;
+import Helpers.ServerConnector;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -39,12 +41,12 @@ public class ProductDialog extends JDialog{
     private final String QR_FILE_TYPES[] = new String[]{"JPEG", "PNG"};
     private final int DEFAULT_QR_SIZE = 250;
     
-    private final String SERVER_DM_KEY = "ServerDomainName";
-    private final String PRODUCT_ID_KEY = "ProductID";
-    private final String PRODUCT_NAME_KEY = "ProductName";
-    private final String MANUFACTURER_NAME_KEY = "ManufacturerName";
-    private final String M_DATE_KEY = "ManufacturingDay";
-    private final String E_DATE_KEY = "ExpirationDay";
+//    private final String SERVER_DM_KEY = "ServerDomainName";
+//    private final String PRODUCT_ID_KEY = "ProductID";
+//    private final String PRODUCT_NAME_KEY = "ProductName";
+//    private final String MANUFACTURER_NAME_KEY = "ManufacturerName";
+//    private final String M_DATE_KEY = "ManufacturingDay";
+//    private final String E_DATE_KEY = "ExpirationDay";
     
     private JButton createButton;
     private JSpinner daySpinner1;
@@ -72,6 +74,8 @@ public class ProductDialog extends JDialog{
     private JTextField serverNameField;
     private JSpinner yearSpinner1;
     private JSpinner yearSpinner2;
+    private JButton editButton;
+    private JButton deleteButton;
     
     private ButtonListener buttonListener;
     private SpinnerListener spinnerListener;
@@ -108,9 +112,11 @@ public class ProductDialog extends JDialog{
         qrTypeBox = new JComboBox<>();
         createButton = new JButton();
         saveButton = new JButton();
+        editButton = new JButton();
+        deleteButton = new JButton();
         qrSizeSpinner = new JSpinner();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         jLabel1.setFont(LABEL_FONT1); // NOI18N
         jLabel1.setText("Thông tin sản phẩm");
@@ -153,9 +159,19 @@ public class ProductDialog extends JDialog{
         saveButton.setFont(LABEL_FONT2); // NOI18N
         saveButton.setText("Lưu");
         
-        serverNameField.setText("sleepy-depths-45970.herokuapp.com");
+        editButton.setFont(LABEL_FONT2);
+        editButton.setText("Sửa");
+        
+        deleteButton.setFont(LABEL_FONT2);
+        deleteButton.setText("Xóa");
+        
+        serverNameField.setText(ServerConnector.getInstance().getServerDomainName());
         qrNameField.setText("D://");
         
+        this.setDefaultSpinners();
+    }
+    
+    private void setDefaultSpinners() {
         Calendar now = Calendar.getInstance();
         daySpinner1.setValue(now.get(Calendar.DAY_OF_MONTH));
         monthSpinner1.setValue(now.get(Calendar.MONTH) + 1);
@@ -163,7 +179,7 @@ public class ProductDialog extends JDialog{
        
         daySpinner2.setValue(now.get(Calendar.DAY_OF_MONTH));
         monthSpinner2.setValue(now.get(Calendar.MONTH) + 1);
-        yearSpinner2.setValue(now.get(Calendar.YEAR));
+        yearSpinner2.setValue(now.get(Calendar.YEAR));        
     }
     
     private void placeGUIComponents() {
@@ -276,8 +292,8 @@ public class ProductDialog extends JDialog{
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createButton)
-                    .addComponent(saveButton))
-                .addContainerGap(66, Short.MAX_VALUE))
+                    .addComponent(saveButton))                    
+                .addContainerGap(66, Short.MAX_VALUE))                
         );
 
         pack();
@@ -313,44 +329,65 @@ public class ProductDialog extends JDialog{
         return this.serverNameField.getText();
     }
 
-    public JSONObject getProductInformation() {
-        if (this.serverNameField.getText().isEmpty() || this.productIDField.getText().isEmpty()) {
-            return null;
-        } 
-        
-        JSONObject jsonObject = new JSONObject();
-        String date;
-        
-        jsonObject.put(SERVER_DM_KEY, this.serverNameField.getText());
-        jsonObject.put(PRODUCT_ID_KEY, this.productIDField.getText()); 
-        jsonObject.put(PRODUCT_NAME_KEY, this.productNameField.getText());
-        jsonObject.put(MANUFACTURER_NAME_KEY, this.manufacturerNameField.getText());
-        
-        date = String.join("/",
+    public String getMDate() {
+        return String.join("/",
                 String.valueOf(this.daySpinner1.getValue()),
                 String.valueOf(this.monthSpinner1.getValue()),
                 String.valueOf(this.yearSpinner1.getValue())
         );
-        jsonObject.put(M_DATE_KEY, date);
-        
-        date = String.join("/",
+    }
+    
+    public String getEDate() {
+        return String.join("/",
                 String.valueOf(this.daySpinner2.getValue()),
                 String.valueOf(this.monthSpinner2.getValue()),
                 String.valueOf(this.yearSpinner2.getValue())
-        );                
-        jsonObject.put(E_DATE_KEY, date);
-        System.out.println(jsonObject.toString());
-        return jsonObject;
+        );     
+    }
+    
+    public JSONObject getProductInformation() {
+        if (this.serverNameField.getText().isEmpty() || this.productIDField.getText().isEmpty()) {
+            return null;
+        } 
+                
+        return Convertor.getInstance().convertProductToJSON(
+                this.serverNameField.getText(),
+                this.productIDField.getText(),
+                this.productNameField.getText(),
+                this.manufacturerNameField.getText(),
+                this.getMDate(),
+                this.getEDate()
+        );
+    }
+    
+    public String[] getProductInformation(int amount, String productState) {
+        String[] result = new String[amount];
+        result[0] = this.productIDField.getText();
+        result[1] = this.productNameField.getText();
+        result[2] = this.manufacturerNameField.getText();
+        result[3] = this.getMDate();
+        result[4] = this.getEDate();
+        if (amount == 6) {
+            result[5] = productState;
+        }
+        return result;
+    }
+    
+    public void reset() {
+        this.productIDField.setText("");
+        this.productNameField.setText("");
+        this.manufacturerNameField.setText("");
+        this.qrNameField.setText("D://");
+        this.setDefaultSpinners();
     }
     
     private class ButtonListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
             JButton target = (JButton) e.getSource();
+            JSONObject productInfo = ProductDialog.this.getProductInformation();
             if (target == ProductDialog.this.createButton) {
                 try {
-                    JSONObject productInfo = ProductDialog.this.getProductInformation();
-
                     Map<EncodeHintType, ErrorCorrectionLevel> hintMap = new HashMap<EncodeHintType, ErrorCorrectionLevel>();
                     hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
                     
@@ -364,13 +401,17 @@ public class ProductDialog extends JDialog{
                     MatrixToImageWriter.writeToPath(bitMatrix,
                             ProductDialog.this.qrTypeBox.getSelectedItem().toString(),
                             (new File(ProductDialog.this.qrNameField.getText())).toPath()
-                    );
+                    );                   
                 } catch (Exception ex) {
                     Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else if (target == ProductDialog.this.saveButton) {
-                    //GUIManager.getInstance().loginDialog.setVisible(true);
-                }
+                ServerConnector.getInstance().sendRequest(ServerConnector.PRODUCT_ADD_PATH, productInfo);                    
+            } else if (target == ProductDialog.this.editButton) {
+                ServerConnector.getInstance().sendRequest(ServerConnector.PRODUCT_EDIT_PATH, productInfo);
+            } else if (target == ProductDialog.this.deleteButton) {
+                ServerConnector.getInstance().sendRequest(ServerConnector.PRODUCT_DELETE_PATH, productInfo);                
+            }
         }
     }
     

@@ -13,14 +13,13 @@ package GUI;
 public class GUIManager {
     public MainFrame mainFrame;
     public ProductDialog productDialog;
-    public LoginDialog loginDialog;    
+    //public LoginDialog loginDialog;    
     
     private static GUIManager instance = new GUIManager();
     
-    public GUIManager() {
+    private GUIManager() {
         this.mainFrame = new MainFrame();
         this.productDialog = new ProductDialog();
-        this.loginDialog = new LoginDialog();    
     }
     
     public static GUIManager getInstance() {

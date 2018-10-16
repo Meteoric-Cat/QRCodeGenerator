@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Helpers.ServerConnector;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
@@ -56,12 +57,14 @@ public class LoginPanel1 extends JPanel {
 
         jLabel4.setText("Mật khẩu");
 
+        serverNameField.setText("sleepy-depths-45970.herokuapp.com");
+        
         loginButton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         loginButton.setText("Đăng nhập");
 
         forgetPassword.setForeground(new java.awt.Color(153, 153, 255));
-        forgetPassword.setText("Quen mat khau?");
-
+        forgetPassword.setText("Quen mat khau?");        
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,7 +112,7 @@ public class LoginPanel1 extends JPanel {
                     .addComponent(loginButton)
                     .addComponent(forgetPassword))
                 .addContainerGap(313, Short.MAX_VALUE))
-        );
+        );        
     }
 
     public class ButtonListener extends MouseAdapter {
@@ -117,9 +120,9 @@ public class LoginPanel1 extends JPanel {
         public void mouseClicked(MouseEvent event) {
             JButton source = (JButton) event.getSource();
             if (source == LoginPanel1.this.loginButton) {
-                JSONObject data = new JSONObject();
-                data.put(LoginPanel1.this.ACCOUNT_KEY, LoginPanel1.this.accountField.getText());
-                data.put(LoginPanel1.this.PASSWORD_KEY, LoginPanel1.this.passwordField.getText());                               
+                ServerConnector.getInstance().setAccount(LoginPanel1.this.accountField.getText());
+                ServerConnector.getInstance().setPassword(LoginPanel1.this.passwordField.getText());
+                ServerConnector.getInstance().sendRequest(ServerConnector.ACCOUNT_LOGIN_PATH, null);
             }
             
         }

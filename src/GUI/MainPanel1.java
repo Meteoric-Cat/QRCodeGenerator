@@ -5,11 +5,16 @@
  */
 package GUI;
 
+import Helpers.Convertor;
+import Helpers.ServerConnector;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -24,9 +29,12 @@ public class MainPanel1 extends javax.swing.JPanel {
     private JButton productCreateButton;
     private JTable productTable;
     private DefaultTableModel tableModel;
+    
+    private int clickedRowID;
 
     public MainPanel1() {
         initComponents();
+        initListeners();
     }
 
     private void initComponents() {
@@ -41,20 +49,23 @@ public class MainPanel1 extends javax.swing.JPanel {
         jLabel1.setText("Số lượng sản phẩm:");
 
         jScrollPane1.setViewportView(productTable);
-        this.tableModel = new DefaultTableModel(new Object[] {
-            "Product id",
-            "Product name",
-            "Manufacturer name",
-            "Manufacturer date",
-            "Expiration date",
-            
+        tableModel = new DefaultTableModel(new Object[] {
+            "ID sản phẩm",
+            "Tên sản phẩm",
+            "Tên nhà sản xuất",
+            "Ngày sản xuất",
+            "Ngày hết hạn",
+            "Trạng thái",
         }, 0);
+        productTable.setModel(tableModel);
 
         productAmountLabel.setText("0");
 
         productCreateButton.setText("Tạo sản phẩm");
 
         logoutButton.setText("Thoát");
+        
+        clickedRowID = 0;
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -90,4 +101,52 @@ public class MainPanel1 extends javax.swing.JPanel {
         );
     }
 
+    public void initListeners() {
+        this.productTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                MainPanel1.this.clickedRowID = MainPanel1.this.productTable.rowAtPoint(event.getPoint());                
+            }
+        });
+    }
+    
+    public void initData(JSONObject data) {
+        int amount = (int) data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY);
+        
+        JSONObject productInfo;
+        for (int i=0; i<amount; i++) {
+            productInfo = (JSONObject) data.get(String.valueOf(i));
+            this.tableModel.addRow(Convertor.getInstance().convertProductToArray(productInfo));            
+        }        
+    }
+    
+    public void addProductInfo(String[] productInfo) {
+        this.tableModel.addRow(productInfo);
+    } 
+    
+    public void editProductInfo(String[] productInfo) {
+        for (int i=0; i<productInfo.length; i++) {
+            this.tableModel.setValueAt(productInfo[i], clickedRowID, i);
+        }
+    }
+    
+    public void deleteProductInfo() {
+        this.tableModel.removeRow(clickedRowID);
+    }
+    
+    public class ButtonListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent event) {
+            JButton button = (JButton) event.getSource();
+            
+            if (button == MainPanel1.this.productCreateButton) {
+                GUIManager.getInstance().productDialog.setEnabled(true);
+                GUIManager.getInstance().productDialog.reset();
+                GUIManager.getInstance().productDialog.setVisible(true);
+            }
+            if (button == MainPanel1.this.logoutButton) {
+                GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.LOGIN_PANEL_ID);
+            }
+        }
+    }   
 }
