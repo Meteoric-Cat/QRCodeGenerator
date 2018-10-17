@@ -30,11 +30,14 @@ public class MainPanel1 extends javax.swing.JPanel {
     private JTable productTable;
     private DefaultTableModel tableModel;
     
+    private ButtonListener buttonListener;
+    
     private int clickedRowID;
 
     public MainPanel1() {
+        super();
         initComponents();
-        initListeners();
+        initEventListeners();
     }
 
     private void initComponents() {
@@ -101,20 +104,24 @@ public class MainPanel1 extends javax.swing.JPanel {
         );
     }
 
-    public void initListeners() {
+    public void initEventListeners() {
         this.productTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
                 MainPanel1.this.clickedRowID = MainPanel1.this.productTable.rowAtPoint(event.getPoint());                
             }
         });
+        
+        this.buttonListener = new ButtonListener();
+        this.logoutButton.addMouseListener(this.buttonListener);
+        this.productCreateButton.addMouseListener(this.buttonListener);
     }
     
     public void initData(JSONObject data) {
-        int amount = (int) data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY);
+        int amount = Integer.parseInt(data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY).toString());
         
         JSONObject productInfo;
-        for (int i=0; i<amount; i++) {
+        for (int i=1; i<=amount; i++) {
             productInfo = (JSONObject) data.get(String.valueOf(i));
             this.tableModel.addRow(Convertor.getInstance().convertProductToArray(productInfo));            
         }        
@@ -135,6 +142,10 @@ public class MainPanel1 extends javax.swing.JPanel {
     }
     
     public class ButtonListener extends MouseAdapter {
+        public ButtonListener() {
+            super();
+        }
+        
         @Override
         public void mouseClicked(MouseEvent event) {
             JButton button = (JButton) event.getSource();
@@ -145,6 +156,11 @@ public class MainPanel1 extends javax.swing.JPanel {
                 GUIManager.getInstance().productDialog.setVisible(true);
             }
             if (button == MainPanel1.this.logoutButton) {
+                int rowAmount = MainPanel1.this.tableModel.getRowCount();
+                for (int i=rowAmount-1; i>=0; i--) {
+                    MainPanel1.this.tableModel.removeRow(i);
+                }
+                    
                 GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.LOGIN_PANEL_ID);
             }
         }

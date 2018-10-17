@@ -76,12 +76,13 @@ public class ServerConnector {
             serverConnection.setRequestMethod(REQUEST_METHOD_1);
             serverConnection.addRequestProperty(REQUEST_PROPERTY_1, RP_VALUE_1);
 
+            System.out.println(finalData.toString());
             serverConnection.setDoOutput(true);
             OutputStream output = serverConnection.getOutputStream();
             output.write(finalData.toString().getBytes());
             output.close();
 
-            serverConnection.setDoInput(true);
+            //serverConnection.setDoInput(true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(serverConnection.getInputStream()));
 
             String temp = reader.readLine();
@@ -99,12 +100,13 @@ public class ServerConnector {
 
             JSONParser parser = new JSONParser();
             JSONObject responseData = (JSONObject) parser.parse(messageBuilder.toString());
+            System.out.println(responseData.toString());
             
             if (path.equals(ACCOUNT_LOGIN_PATH)) {
                 this.handleLoginResult(responseData);                        
             } else {
-                int messageCode = (int) data.get(RESPONSE_CODE_KEY);
-                String messageContent = (String) data.get(RESPONSE_MSG_KEY);
+                int messageCode = Integer.parseInt(data.get(RESPONSE_CODE_KEY).toString());
+                String messageContent = (String) data.get(RESPONSE_MSG_KEY);               
                 JOptionPane.showMessageDialog(null, messageContent);
 
                 if (path.equals(PRODUCT_ADD_PATH)) {
@@ -122,7 +124,7 @@ public class ServerConnector {
     }
 
     private void handleLoginResult(JSONObject data) {
-        int resultCode = (int) data.get(RESPONSE_CODE_KEY);
+        int resultCode = Integer.parseInt(data.get(RESPONSE_CODE_KEY).toString());
         
         if (resultCode != NO) {
             GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);

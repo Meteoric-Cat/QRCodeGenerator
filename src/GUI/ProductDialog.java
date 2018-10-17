@@ -309,6 +309,8 @@ public class ProductDialog extends JDialog{
         this.buttonListener = new ButtonListener();
         this.createButton.addMouseListener(this.buttonListener);
         this.saveButton.addMouseListener(this.buttonListener);
+        this.editButton.addMouseListener(this.buttonListener);
+        this.deleteButton.addMouseListener(this.buttonListener);
     }
     
     public JSpinner[] getDaySpinners() {

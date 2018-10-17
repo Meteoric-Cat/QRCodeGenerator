@@ -12,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import org.json.simple.JSONObject;
 
 /**
  *
@@ -31,9 +30,13 @@ public class LoginPanel1 extends JPanel {
     private JButton loginButton;
     private JTextField passwordField;
     private JTextField serverNameField;
+    
+    private ButtonListener buttonListener;
 
     public LoginPanel1() {
-        initComponents();
+        super();
+        this.initComponents();
+        this.initEventListeners();
     }
 
     private void initComponents() {
@@ -115,14 +118,26 @@ public class LoginPanel1 extends JPanel {
         );        
     }
 
+    private void initEventListeners() {
+        this.buttonListener = new ButtonListener();
+        this.loginButton.addMouseListener(this.buttonListener);
+    }
+    
     public class ButtonListener extends MouseAdapter {
+        public ButtonListener() {
+            super();
+        }        
+        
         @Override
         public void mouseClicked(MouseEvent event) {
             JButton source = (JButton) event.getSource();
             if (source == LoginPanel1.this.loginButton) {
+                ServerConnector.getInstance().setServerDomainName(LoginPanel1.this.serverNameField.getText());
                 ServerConnector.getInstance().setAccount(LoginPanel1.this.accountField.getText());
                 ServerConnector.getInstance().setPassword(LoginPanel1.this.passwordField.getText());
                 ServerConnector.getInstance().sendRequest(ServerConnector.ACCOUNT_LOGIN_PATH, null);
+                
+                GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);
             }
             
         }
