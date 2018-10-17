@@ -104,16 +104,16 @@ public class ServerConnector {
                 this.handleLoginResult(responseData);                        
             } else {
                 int messageCode = (int) data.get(RESPONSE_CODE_KEY);
-                String message = (String) data.get(RESPONSE_MSG_KEY);
-                JOptionPane.showMessageDialog(null, message);
+                String messageContent = (String) data.get(RESPONSE_MSG_KEY);
+                JOptionPane.showMessageDialog(null, messageContent);
 
-//                if (path.equals(PRODUCT_ADD_PATH)) {
-//                   this.handlePAResult(responseData);
-//                } else if (path.equals(PRODUCT_EDIT_PATH)) {
-//                    this.handlePEResult(responseData);                
-//                } else if (path.equals(PRODUCT_DELETE_PATH)) {
-//                   this.handlePDResult(responseData);
-//                }
+                if (path.equals(PRODUCT_ADD_PATH)) {
+                   this.handlePAResult(messageCode);
+                } else if (path.equals(PRODUCT_EDIT_PATH)) {
+                    this.handlePEResult(messageCode);                
+                } else if (path.equals(PRODUCT_DELETE_PATH)) {
+                   this.handlePDResult(messageCode);
+                }
             }
             
         } catch (Exception ex) {
@@ -124,9 +124,12 @@ public class ServerConnector {
     private void handleLoginResult(JSONObject data) {
         int resultCode = (int) data.get(RESPONSE_CODE_KEY);
         
-        if (resultCode < 0) {
+        if (resultCode != NO) {
             GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);
             GUIManager.getInstance().mainFrame.getMainPanel().initData(data);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    data.get(RESPONSE_MSG_KEY).toString());
         }
     }
     
@@ -141,11 +144,16 @@ public class ServerConnector {
     
     private void handlePEResult(int messageCode) {
         if (messageCode == YES) {
+            GUIManager.getInstance().mainFrame.getMainPanel().editProductInfo(
+                    GUIManager.getInstance().productDialog.getProductInformation(5, "True")
+            );
         }
     }
     
     private void handlePDResult(int messageCode) {
-        
+        if (messageCode == YES) {
+            GUIManager.getInstance().mainFrame.getMainPanel().deleteProductInfo();
+        }
     }
     
     public void setServerDomainName(String serverDomainName) {
