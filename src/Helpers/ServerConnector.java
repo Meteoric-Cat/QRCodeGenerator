@@ -105,8 +105,8 @@ public class ServerConnector {
             if (path.equals(ACCOUNT_LOGIN_PATH)) {
                 this.handleLoginResult(responseData);                        
             } else {
-                int messageCode = Integer.parseInt(data.get(RESPONSE_CODE_KEY).toString());
-                String messageContent = (String) data.get(RESPONSE_MSG_KEY);               
+                int messageCode = Integer.parseInt(responseData.get(RESPONSE_CODE_KEY).toString());
+                String messageContent = (String) responseData.get(RESPONSE_MSG_KEY);               
                 JOptionPane.showMessageDialog(null, messageContent);
 
                 if (path.equals(PRODUCT_ADD_PATH)) {
@@ -128,6 +128,7 @@ public class ServerConnector {
         
         if (resultCode != NO) {
             GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);
+            GUIManager.getInstance().productDialog.setServerDomainName(this.serverDomainName);
             GUIManager.getInstance().mainFrame.getMainPanel().initData(data);
         } else {
             JOptionPane.showMessageDialog(null,

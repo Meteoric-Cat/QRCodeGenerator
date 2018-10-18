@@ -33,6 +33,7 @@ public class MainPanel1 extends javax.swing.JPanel {
     private ButtonListener buttonListener;
     
     private int clickedRowID;
+    private int productAmount;
 
     public MainPanel1() {
         super();
@@ -108,7 +109,17 @@ public class MainPanel1 extends javax.swing.JPanel {
         this.productTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                MainPanel1.this.clickedRowID = MainPanel1.this.productTable.rowAtPoint(event.getPoint());                
+                MainPanel1.this.clickedRowID = MainPanel1.this.productTable.rowAtPoint(event.getPoint());   
+                
+                GUIManager.getInstance().productDialog.setEnabled(true);
+                GUIManager.getInstance().productDialog.initData(
+                        MainPanel1.this.tableModel.getValueAt(MainPanel1.this.clickedRowID, 0).toString(),
+                        MainPanel1.this.tableModel.getValueAt(MainPanel1.this.clickedRowID, 1).toString(),
+                        MainPanel1.this.tableModel.getValueAt(MainPanel1.this.clickedRowID, 2).toString(),
+                        MainPanel1.this.tableModel.getValueAt(MainPanel1.this.clickedRowID, 3).toString(),
+                        MainPanel1.this.tableModel.getValueAt(MainPanel1.this.clickedRowID, 4).toString()
+                );
+                GUIManager.getInstance().productDialog.setVisible(true);
             }
         });
         
@@ -118,18 +129,21 @@ public class MainPanel1 extends javax.swing.JPanel {
     }
     
     public void initData(JSONObject data) {
-        int amount = Integer.parseInt(data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY).toString());
-        this.productAmountLabel.setText(String.valueOf(amount));
+        productAmount = Integer.parseInt(data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY).toString());
+        this.productAmountLabel.setText(String.valueOf(productAmount));
         
         JSONObject productInfo;
-        for (int i=1; i<=amount; i++) {
+        for (int i=1; i<=productAmount; i++) {
             productInfo = (JSONObject) data.get(String.valueOf(i));
             this.tableModel.addRow(Convertor.getInstance().convertProductToArray(productInfo));            
         }        
     }
     
-    public void addProductInfo(String[] productInfo) {
+    public void addProductInfo(String[] productInfo) {        
+        productAmount++;
+        this.productAmountLabel.setText(String.valueOf(productAmount));
         this.tableModel.addRow(productInfo);
+        
     } 
     
     public void editProductInfo(String[] productInfo) {
@@ -139,6 +153,8 @@ public class MainPanel1 extends javax.swing.JPanel {
     }
     
     public void deleteProductInfo() {
+        productAmount--;
+        this.productAmountLabel.setText(String.valueOf(productAmount));
         this.tableModel.removeRow(clickedRowID);
     }
     
@@ -152,7 +168,7 @@ public class MainPanel1 extends javax.swing.JPanel {
             JButton button = (JButton) event.getSource();
             
             if (button == MainPanel1.this.productCreateButton) {
-                GUIManager.getInstance().productDialog.setEnabled(true);
+                GUIManager.getInstance().productDialog.setEnabled(true);               
                 GUIManager.getInstance().productDialog.reset();
                 GUIManager.getInstance().productDialog.setVisible(true);
             }

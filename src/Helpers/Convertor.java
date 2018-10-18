@@ -53,5 +53,5 @@ public class Convertor {
         result.put(M_DATE_KEY, data[4]);
         result.put(E_DATE_KEY, data[5]);
         return result;        
-    }
+    }    
 }

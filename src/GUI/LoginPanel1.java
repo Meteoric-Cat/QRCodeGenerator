@@ -135,9 +135,9 @@ public class LoginPanel1 extends JPanel {
                 ServerConnector.getInstance().setServerDomainName(LoginPanel1.this.serverNameField.getText());
                 ServerConnector.getInstance().setAccount(LoginPanel1.this.accountField.getText());
                 ServerConnector.getInstance().setPassword(LoginPanel1.this.passwordField.getText());
-                ServerConnector.getInstance().sendRequest(ServerConnector.ACCOUNT_LOGIN_PATH, null);
-                
-                GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);
+                ServerConnector.getInstance().sendRequest(ServerConnector.ACCOUNT_LOGIN_PATH, null);                                
+                //GUIManager.getInstance().mainFrame.changePanel(MainFrame.PanelId.MAIN_PANEL_ID);
+                //GUIManager.getInstance().productDialog.setServerDomainName(LoginPanel1.this.serverNameField.getText());
             }
             
         }
