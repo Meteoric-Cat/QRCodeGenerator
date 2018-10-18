@@ -119,6 +119,7 @@ public class MainPanel1 extends javax.swing.JPanel {
     
     public void initData(JSONObject data) {
         int amount = Integer.parseInt(data.get(ServerConnector.getInstance().RESPONSE_CODE_KEY).toString());
+        this.productAmountLabel.setText(String.valueOf(amount));
         
         JSONObject productInfo;
         for (int i=1; i<=amount; i++) {

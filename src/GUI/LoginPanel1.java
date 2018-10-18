@@ -18,8 +18,8 @@ import javax.swing.JTextField;
  * @author Meteoric
  */
 public class LoginPanel1 extends JPanel {
-    private final String ACCOUNT_KEY = "Account";
-    private final String PASSWORD_KEY = "Password";
+//    private final String ACCOUNT_KEY = "Account";
+//    private final String PASSWORD_KEY = "Password";
 
     private JTextField accountField;
     private JLabel forgetPassword;
